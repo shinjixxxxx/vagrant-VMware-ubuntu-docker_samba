@@ -126,6 +126,8 @@ config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
 
     # 【簡単な4つの方法】UbuntuにDockerをインストールするには
     # https://kinsta.com/jp/blog/install-docker-ubuntu/?fbclid=IwAR0ON33QfuacgwlWS8e6TvN3JUEcGn0DR1Z8a4T6jkItDiwc-vr7o8B6f9Y
+    # Install Docker Engine on Ubuntu
+    # https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script
 
     apt install -y ca-certificates curl gnupg lsb-release
 
