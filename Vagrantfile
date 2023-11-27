@@ -203,9 +203,8 @@ config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
     </VirtualHost>\n\
     ' > /etc/apache2/sites-available/001-docker.conf
 
-    echo  /etc/apache2/sites-available の下でなぜかパーミッションエラーが出るため以下を手動で
-    sudo ln -s /etc/apache2/sites-available/001-docker.conf /etc/apache2/sites-enabled/001-docker.conf
-    sudo rm /etc/apache2/sites-enabled/000-default.conf
+    ln -s /etc/apache2/sites-available/001-docker.conf /etc/apache2/sites-enabled/001-docker.conf
+    rm /etc/apache2/sites-enabled/000-default.conf
 
 
     source /etc/apache2/envvars
