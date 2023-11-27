@@ -1,10 +1,11 @@
-# Node開発環境用Vagrantfile
+# Node開発環境用Vagrantfile(M2Mac - vmware fusion 対応)
 
 ## モチベーション
 webpackなどを使ったタスクランナー環境をvagrant上に短時間で簡単に構築できるように作りました。
 npm install時のファイル名長やシンボリックリンクの問題を避けるためゲストosのファイルシステムを使い、sambaでホストとファイル共有します。
 
 ## 概要
+M2Mac - vmware fusion 対応した新しいバージョンです。
 vagrant 環境を利用してnodeのタスクランナーを使った開発を行うための
 環境をプロビジョニングするVagrantfileです。
 Vagrantfileを配置してvagrant upするだけで環境がnodeによる開発環境が作成されます。
