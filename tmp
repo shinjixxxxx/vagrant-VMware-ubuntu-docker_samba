@@ -1,0 +1,5 @@
+sudo  apt install -y nodejs npm
+sudo  npm install -g -y n
+sudo  n latest
+sudo  apt purge -y nodejs npm
+sudo  apt autoremove -y
