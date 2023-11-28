@@ -181,8 +181,8 @@ config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
     # 【Ubuntu 20.04 LTS Server】Apache2とPHPを動かす
     # https://www.yokoweb.net/2020/08/14/ubuntu-20_04-apache-php/
     apt-get install -y apache2
+    apt-get install -y php libapache2-mod-php php-xml
     systemctl enable apache2
-    apt-get install -y php libapache2-mod-php
 
     php -v
     a2enmod php8.1 ###################バージョン注意
