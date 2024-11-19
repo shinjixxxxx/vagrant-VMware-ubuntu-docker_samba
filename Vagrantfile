@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
 
 # config.vm.network "private_network"
 
-config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
+config.vm.network "public_network", ip: "192.168.1.201" ,bridge: "en0: Ethernet"
 
   
 
@@ -126,8 +126,6 @@ config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
 
     # 【簡単な4つの方法】UbuntuにDockerをインストールするには
     # https://kinsta.com/jp/blog/install-docker-ubuntu/?fbclid=IwAR0ON33QfuacgwlWS8e6TvN3JUEcGn0DR1Z8a4T6jkItDiwc-vr7o8B6f9Y
-    # Install Docker Engine on Ubuntu
-    # https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script
 
     apt install -y ca-certificates curl gnupg lsb-release
 
@@ -181,8 +179,8 @@ config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
     # 【Ubuntu 20.04 LTS Server】Apache2とPHPを動かす
     # https://www.yokoweb.net/2020/08/14/ubuntu-20_04-apache-php/
     apt-get install -y apache2
-    apt-get install -y php libapache2-mod-php php-xml
     systemctl enable apache2
+    apt-get install -y php libapache2-mod-php
 
     php -v
     a2enmod php8.1 ###################バージョン注意
