@@ -32,6 +32,17 @@ Vagrant.configure("2") do |config|
   # NOTE: This will enable public access to the opened port
   # config.vm.network "forwarded_port", guest: 443, host: 443, auto_correct: false
 
+  
+  ###
+  ###
+  config.vm.network "forwarded_port", guest: 5173, host: 5173, host_ip: "0.0.0.0"
+  config.vm.network "forwarded_port", guest: 3000, host: 3000, host_ip: "0.0.0.0"
+#  config.vm.network "forwarded_port", guest: 3000, host: 3000
+
+  ###
+  ###
+
+  
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine and only allow access
   # via 127.0.0.1 to disable public access
@@ -49,7 +60,7 @@ Vagrant.configure("2") do |config|
 
 # config.vm.network "private_network"
 
-config.vm.network "public_network", ip: "192.168.1.201" ,bridge: "en0: Ethernet"
+config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
 
   
 
@@ -212,4 +223,11 @@ config.vm.network "public_network", ip: "192.168.1.201" ,bridge: "en0: Ethernet"
 
 
   SHELL
+
+
+
+config.vm.provision "shell", run: "always", inline: <<-SHELL
+  /dockerd/start-distviewer.sh
+SHELL
+
 end
