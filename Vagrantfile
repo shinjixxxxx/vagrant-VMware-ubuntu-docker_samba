@@ -6,6 +6,11 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
+
+  config.ssh.insert_key = false
+  config.ssh.private_key_path = "~/.vagrant.d/insecure_private_key"
+
+
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
@@ -37,8 +42,7 @@ Vagrant.configure("2") do |config|
   ###
   config.vm.network "forwarded_port", guest: 5173, host: 5173, host_ip: "0.0.0.0"
   config.vm.network "forwarded_port", guest: 3000, host: 3000, host_ip: "0.0.0.0"
-#  config.vm.network "forwarded_port", guest: 3000, host: 3000
-
+  config.vm.network "forwarded_port", guest: 6006, host: 6006, host_ip: "0.0.0.0"
   ###
   ###
 
@@ -94,17 +98,7 @@ config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
     # Allocate processors to the virtual machine.
     vb.cpus = "1"
 
-    #################### gui GUI 
-    #################### gui GUI 
-    #################### gui GUI 
-    #################### gui GUI 
-    #################### gui GUI 
-        #	vb.gui = true ##############
-    #################### gui GUI 
-    #################### gui GUI 
-    #################### gui GUI 
-    #################### gui GUI 
-    #################### gui GUI
+
 
   end
   
