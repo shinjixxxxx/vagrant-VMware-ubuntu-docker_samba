@@ -23,13 +23,9 @@ Vagrant.configure("2") do |config|
 
   # config.vm.box = "gutehall/ubuntu24-10"
   # config.vm.box_version = "2024.10.11"
-  # config.vm.box = "bento/ubuntu-22.04-arm64"
-  config.vm.box = "gyptazy/ubuntu22.04-arm64"
-  config.vm.box_version = "1.0.1"
+  config.vm.box = "bento/ubuntu-22.04-arm64"
 
 
-
-  
 
  # Define virtual machine name.
   config.vm.define "sloopstash-ubuntu-22-04-server"
@@ -153,19 +149,12 @@ config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
     apt-get -yq install ca-certificates curl gnupg lsb-release
 
     # Docker repo（★ jammy を明示）
-    # install -d -m 0755 /etc/apt/keyrings
-    # curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-
     install -d -m 0755 /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
-    | gpg --dearmor --batch --yes \
-    | tee /etc/apt/keyrings/docker.gpg >/dev/null
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     chmod a+r /etc/apt/keyrings/docker.gpg
-
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu jammy stable" > /etc/apt/sources.list.d/docker.list
     apt-get -yq update
     apt-get -yq install docker-ce docker-ce-cli containerd.io
-
 
     
 
@@ -182,17 +171,9 @@ config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
   
     ###################
     # docker samba 設定
-    ###################
-    if [ ! -d /dockerd ]; then
-      mkdir /dockerd
-    fi
+    ###################    
+    mkdir /dockerd
     chmod 777 /dockerd
-
-    # dockerd 作成直後に viewer をクローン
-    if [ ! -d /dockerd/.git ]; then
-      git clone https://github.com/shinjixxxxx/js-project-quick-viewer-for-vitepj /dockerd
-    fi  
-
     echo 'sudo docker rm -f samba ; sudo docker run -it --name samba -p 139:139 -p 445:445 -v /dockerd:/dockerd -d dperson/samba -s "dockerd;/dockerd;yes;no"' > /dockerd/docker_samba.sh
     chmod +x /dockerd/docker_samba.sh
     ###################
@@ -232,67 +213,42 @@ config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
     # apt-get install -y php libapache2-mod-php
 
     # Apache + PHP（jammy は PHP 8.1）
-    # apt-get -yq install apache2 php libapache2-mod-php
+    apt-get -yq install apache2 php libapache2-mod-php
     # a2enmod はバージョン付きでなくモジュール名を指定
-    # a2enmod php
-    # a2enmod rewrite
-    # systemctl enable apache2
-    # systemctl restart apache2
+    a2enmod php
+    a2enmod rewrite
+    systemctl enable apache2
+    systemctl restart apache2
 
-
-
-    # a2enmod php8.1 ###################バージョン注意
-
-
-
-        apt-get -yq install apache2 php libapache2-mod-php || true
-        PHPV=$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;' 2>/dev/null || echo "")
-        if [ -n "$PHPV" ] && [ -f "/etc/apache2/mods-available/php${PHPV}.load" ]; then
-          a2enmod "php${PHPV}"
-          a2enmod rewrite
-          systemctl enable --now apache2
-        else
-          apt-get -yq install php-fpm
-          a2enmod proxy_fcgi setenvif
-          a2enconf "php*-fpm" || a2enconf "php${PHPV}-fpm" || true
-          systemctl enable --now php*-fpm.service || true
-          systemctl reload apache2 || systemctl restart apache2
-        fi
 
 
     php -v
+    a2enmod php8.1 ###################バージョン注意
+
+    ###################
+    # apache2設定
+    ###################
+    
+    
+    echo  '<VirtualHost *:80>\n\
+          ServerAdmin webmaster@localhost\n\
+          DocumentRoot /dockerd\n\
+          ErrorLog ${APACHE_LOG_DIR}/error.log\n\
+          CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
+          <Directory /dockerd/>\n\
+            Options Indexes FollowSymLinks\n\
+            AllowOverride None\n\
+            Require all granted\n\
+          </Directory>\n\
+    </VirtualHost>\n\
+    ' > /etc/apache2/sites-available/001-docker.conf
+
+    ln -s /etc/apache2/sites-available/001-docker.conf /etc/apache2/sites-enabled/001-docker.conf
+    rm /etc/apache2/sites-enabled/000-default.conf
 
 
-
-# 仮想ホストを書き込み（echoよりヒアドキュメントが安全）
-cat >/etc/apache2/sites-available/001-docker.conf <<'VHOST'
-<VirtualHost *:80>
-  ServerAdmin webmaster@localhost
-  DocumentRoot /dockerd
-
-  ErrorLog ${APACHE_LOG_DIR}/error.log
-  CustomLog ${APACHE_LOG_DIR}/access.log combined
-
-  <Directory /dockerd/>
-    Options Indexes FollowSymLinks
-    AllowOverride None
-    Require all granted
-  </Directory>
-</VirtualHost>
-VHOST
-
-
-  # サイトの有効/無効化は専用コマンドで
-  a2ensite 001-docker.conf
-  a2dissite 000-default.conf || true
-
-  # ※ envvars を source しない（set -u と相性が悪い）
-  # set +u; . /etc/apache2/envvars; set -u  # ←どうしても必要ならこの形
-
-  # Apache の再読み込み/再起動
-  systemctl reload apache2 || systemctl restart apache2
-
-
+    source /etc/apache2/envvars
+    systemctl restart apache2
 
 
   SHELL
