@@ -20,7 +20,7 @@ n を使って node のバージョンを管理できます。
 sambaでゲストマシンの/dockerdが共有されるのでVscodeやSublimeTextなどを使ってソースを編集し、
 ゲストマシンのnode環境を使ってwebpackなどでトランスパイルします。
 結果をブラウザで確認します。
-http://192.168.33.10:8080
+http://192.168.33.10:80
 ```bash
   $ ### 使用例：
   $ # vagrant用のディレクトリを作ってVagrantfileをクローン → vagrant up実行
@@ -91,18 +91,19 @@ smb://192.168.33.10
 - n
 - docker
 - emacs
-  
-### httpアクセス
-```
-  $ curl http://192.168.33.10:8080
-```
-  
+
+### JS開発
+js開発ディレクトリビューサーバ自動追加
+
+https://github.com/shinjixxxxx/js-project-quick-viewer-for-vitepj
+localhots:3000
+
 ### 環境
 ```
-vagrant@ubuntu-bionic:~$ lsb_release -a
+vagrant@sloopstash-ubuntu-22-04-server:~$ lsb_release -a
 No LSB modules are available.
 Distributor ID:	Ubuntu
-Description:	Ubuntu 18.04.4 LTS
-Release:	18.04
-Codename:	bionic
+Description:	Ubuntu 22.04.5 LTS
+Release:	22.04
+Codename:	jammy
 ```
