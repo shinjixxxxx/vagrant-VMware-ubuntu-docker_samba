@@ -20,7 +20,7 @@ n を使って node のバージョンを管理できます。
 sambaでゲストマシンの/dockerdが共有されるのでVscodeやSublimeTextなどを使ってソースを編集し、
 ゲストマシンのnode環境を使ってwebpackなどでトランスパイルします。
 結果をブラウザで確認します。
-http://192.168.33.10:80
+http://192.168.1.200
 ```bash
   $ ### 使用例：
   $ # vagrant用のディレクトリを作ってVagrantfileをクローン → vagrant up実行
@@ -47,7 +47,22 @@ http://192.168.33.10:80
   vagrant@ubuntu:/dockerd/pj$
 
 ```
-  
+```bash
+  $ vagrant up
+  ......install
+  $ vagrant ssh
+  Welcome to Ubuntu 18.04.4 LTS (GNU/Linux 4.15.0-96-generic x86_64)
+  System information as of Wed Apr 22 01:26:18 UTC 2020
+  vagrant@ubuntu:~$
+  vagrant@ubuntu:~$
+  vagrant@ubuntu:~$ cd /dockerd
+  vagrant@ubuntu:~$ npm create vite@latest 10.project_dir
+  vagrant@ubuntu:~$ cd 10.project_dir
+  vagrant@ubuntu:~$ npm run dev
+  vagrant@ubuntu:~$ 
+
+```
+
   
 ---
 ## 詳細
@@ -56,12 +71,14 @@ windowsやmacintoshなどの環境の違いによって生じる問題を回避�
 ホストマシンの環境に影響されないようにゲストマシンのファイルはsambaで共有します。
 Samba共有にはdockerのdeperson/sambaを使用します。
 
-- 開発ディレクトリ（/vagrantd）を http://192.168.33.10:8080 で見えるようにします。
+- 開発ディレクトリ（/vagrantd）を http://192.168.1.200 で見えるようにします。
 - 開発ディレクトリ（/vagrantd）を deperson/sambaでwindows ネットワーク共有で
   ホストのシステムとファイル共有します。
 
 ### 開発ディレクトリ
-8080ポートでhttpアクセスできます。
+80ポートでhttpアクセスできます。
+3000ポートで/dockerのしたの一覧が出ます。
+viteように5173ポートが開いてます。
 sambaでファイル共有されます。
 ```
 /dockerd
@@ -72,15 +89,15 @@ sambaでファイル共有されます。
 [移動] ＞ [サーバーへ接続]
 を選んで、以下のアドレスに接続。
 ```
-smb://192.168.33.10
+smb://192.168.1.200
 ```
 2. [◉ゲスト] を選んで[接続]
 *※ 一定時間で共有が外れるので接続しなおしてください。*
-   
+
 #### windowsの場合
 エクスプローラのアドレスに以下のアドレスへアクセス。
 ```
-¥¥192.168.33.10
+¥¥192.168.1.200
 ```
 ### インストールソフト 
 最低限の開発環境として以下のアプリがインストールされます。

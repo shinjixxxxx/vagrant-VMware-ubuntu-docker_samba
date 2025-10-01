@@ -119,15 +119,57 @@ Vagrant.configure("2") do |config|
     if [ ! -d /dockerd ]; then
       mkdir /dockerd
     fi
+    chown -R vagrant:vagrant /dockerd
     chmod 777 /dockerd
 
-    # dockerd 作成直後に viewer をクローン
+    # dockerd 作成直後、ディレクトリが空のうちに viewer をクローン 
     if [ ! -d /dockerd/.git ]; then
       git clone https://github.com/shinjixxxxx/js-project-quick-viewer-for-vitepj /dockerd
     fi  
 
-    echo 'sudo docker rm -f samba ; sudo docker run -it --name samba -p 139:139 -p 445:445 -v /dockerd:/dockerd -d dperson/samba -s "dockerd;/dockerd;yes;no"' > /dockerd/docker_samba.sh
+
+
+
+
+    # echo 'sudo docker rm -f samba ; sudo docker run -it --name samba -p 139:139 -p 445:445 -v /dockerd:/dockerd -d dperson/samba -s "dockerd;/dockerd;yes;no"' > /dockerd/docker_samba.sh
+    # chmod +x /dockerd/docker_samba.sh
+
+# 起動スクリプトを作成（既存を上書き）
+cat >/dockerd/docker_samba.sh <<'EOS'
+#!/usr/bin/env bash
+set -euo pipefail
+docker rm -f samba >/dev/null 2>&1 || true
+exec docker run -d --name samba \
+  --restart unless-stopped \
+  -p 139:139 -p 445:445 \
+  -v /dockerd:/dockerd \
+  -e USERID=1000 -e GROUPID=1000 \
+  dperson/samba \
+  -u "vagrant;vagrant" \
+  -s "dockerd;/dockerd;yes;no;yes;all;vagrant"
+EOS
+chmod +x /dockerd/docker_samba.sh
+# 念のため所有権も揃える
+chown -R vagrant:vagrant /dockerd
+# すぐ起動
+/dockerd/docker_samba.sh
+
+
+
+
+
     chmod +x /dockerd/docker_samba.sh
+
+
+
+
+
+
+
+
+
+
+
     ###################
     # docker samba 自動起動設定
     ###################
@@ -135,6 +177,16 @@ Vagrant.configure("2") do |config|
     echo 'sudo /dockerd/docker_samba.sh\n' >> /etc/rc.local
     chmod +x /etc/rc.local
     /etc/rc.local
+
+
+
+
+
+
+
+
+
+
 
 
     ###################
