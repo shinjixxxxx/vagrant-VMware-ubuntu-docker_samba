@@ -7,24 +7,18 @@
 # you're doing.
 Vagrant.configure("2") do |config|
 
-  # config.ssh.insert_key = false
-  # config.ssh.private_key_path = "~/.vagrant.d/insecure_private_key"
+  config.ssh.insert_key = false
+  config.ssh.private_key_path = "~/.vagrant.d/insecure_private_key"
 
 
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
-
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  # config.vm.box = "sloopstash/ubuntu-22-04"
-  # config.vm.box_version = "2.1.1"
-
-  config.vm.box = "gutehall/ubuntu24-10"
-  config.vm.box_version = "2024.10.11"
-
-
+  config.vm.box = "sloopstash/ubuntu-22-04"
+  config.vm.box_version = "2.1.1"
 
  # Define virtual machine name.
   config.vm.define "sloopstash-ubuntu-22-04-server"
@@ -48,7 +42,7 @@ Vagrant.configure("2") do |config|
   ###
   config.vm.network "forwarded_port", guest: 5173, host: 5173, host_ip: "0.0.0.0"
   config.vm.network "forwarded_port", guest: 3000, host: 3000, host_ip: "0.0.0.0"
-  # config.vm.network "forwarded_port", guest: 6006, host: 6006, host_ip: "0.0.0.0"
+  config.vm.network "forwarded_port", guest: 6006, host: 6006, host_ip: "0.0.0.0"
   ###
   ###
 
@@ -122,9 +116,9 @@ config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
   ###########################################################################
 
   config.vm.provision "shell", inline: <<-SHELL
-    apt-get update
-    apt-get upgrade -y
-    apt-get install -y wget vim net-tools gcc make tar git unzip sysstat tree emacs
+    apt update
+    apt upgrade -y
+    apt install -y wget vim net-tools gcc make tar git unzip sysstat tree emacs
 
 
     ###################
@@ -138,16 +132,17 @@ config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
     # 【簡単な4つの方法】UbuntuにDockerをインストールするには
     # https://kinsta.com/jp/blog/install-docker-ubuntu/?fbclid=IwAR0ON33QfuacgwlWS8e6TvN3JUEcGn0DR1Z8a4T6jkItDiwc-vr7o8B6f9Y
 
-    apt-get install -y ca-certificates curl gnupg lsb-release
+    apt install -y ca-certificates curl gnupg lsb-release
 
     mkdir -p /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     chmod a+r /etc/apt/keyrings/docker.gpg
 
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt update
 
     # INSTALL DOCKER ENGINE
-    apt-get install -y docker-ce docker-ce-cli containerd.io
+    apt install -y docker-ce docker-ce-cli containerd.io
 
   
     ###################
@@ -173,11 +168,11 @@ config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
 
     # https://www.trifields.jp/how-to-install-node-js-on-ubuntu1804-3544
     
-    apt-get install -y nodejs npm
+    apt install -y nodejs npm
     npm install -g -y n
     n latest
-    apt-get purge -y nodejs npm
-    apt-get autoremove -y
+    apt purge -y nodejs npm
+    apt autoremove -y
   
 
     ###################
