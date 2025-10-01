@@ -24,12 +24,11 @@ Vagrant.configure("2") do |config|
   # config.vm.box = "gutehall/ubuntu24-10"
   # config.vm.box_version = "2024.10.11"
   # config.vm.box = "bento/ubuntu-22.04-arm64"
+
   config.vm.box = "gyptazy/ubuntu22.04-arm64"
   config.vm.box_version = "1.0.1"
 
 
-
-  
 
  # Define virtual machine name.
   config.vm.define "sloopstash-ubuntu-22-04-server"
@@ -129,7 +128,8 @@ config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
   config.vm.provision "shell", inline: <<-SHELL
 
 
-    set -eux
+    # set -eux
+    set -eu
     export DEBIAN_FRONTEND=noninteractive
 
 
@@ -292,12 +292,27 @@ VHOST
   # Apache の再読み込み/再起動
   systemctl reload apache2 || systemctl restart apache2
 
-
-
-
   SHELL
 
 
+# --- 2) vagrant ユーザーで Node/npm セット & express を入れる ---
+config.vm.provision "shell", privileged: false, inline: <<-'SHELL'
+  set -eux
+  cd /dockerd
+
+  sudo chown -R vagrant:vagrant /dockerd
+  # express をインストール（-y は不要）
+  npm install express
+
+  # 確認
+  node -p "require.resolve('express')" || node -p "import.meta.url" >/dev/null
+SHELL
+
+
+
+
+
+  
 
 config.vm.provision "shell", run: "always", inline: <<-SHELL
   /dockerd/start-distviewer.sh
