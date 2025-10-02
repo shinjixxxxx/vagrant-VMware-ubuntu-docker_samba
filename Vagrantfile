@@ -150,8 +150,35 @@ config.vm.network "public_network", ip: "192.168.1.200" ,bridge: "en0: Ethernet"
     ###################    
     mkdir /dockerd
     chmod 777 /dockerd
-    echo 'sudo docker rm -f samba ; sudo docker run -it --name samba -p 139:139 -p 445:445 -v /dockerd:/dockerd -d dperson/samba -s "dockerd;/dockerd;yes;no"' > /dockerd/docker_samba.sh
-    chmod +x /dockerd/docker_samba.sh
+    # echo 'sudo docker rm -f samba ; sudo docker run -it --name samba -p 139:139 -p 445:445 -v /dockerd:/dockerd -d dperson/samba -s "dockerd;/dockerd;yes;no"' > /dockerd/docker_samba.sh
+    # chmod +x /dockerd/docker_samba.sh
+
+
+# 起動スクリプトを作成（既存を上書き）
+cat >/dockerd/docker_samba.sh <<'EOS'
+#!/usr/bin/env bash
+set -euo pipefail
+docker rm -f samba >/dev/null 2>&1 || true
+exec docker run -d --name samba \
+  --restart unless-stopped \
+  -p 139:139 -p 445:445 \
+  -v /dockerd:/dockerd \
+  -e USERID=1000 -e GROUPID=1000 \
+  dperson/samba \
+  -u "vagrant;vagrant" \
+  -s "dockerd;/dockerd;yes;no;yes;all;vagrant"
+EOS
+chmod +x /dockerd/docker_samba.sh
+# 念のため所有権も揃える
+chown -R vagrant:vagrant /dockerd
+# すぐ起動
+/dockerd/docker_samba.sh
+
+
+
+
+
+
     ###################
     # docker samba 自動起動設定
     ###################
