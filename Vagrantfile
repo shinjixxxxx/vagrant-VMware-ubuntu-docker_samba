@@ -9,8 +9,8 @@ Vagrant.configure("2") do |config|
 
 	# SSH できなくなった時 以下解放
 	# config.ssh.username = "vagrant"
-	# config.ssh.insert_key = false
-	# config.ssh.private_key_path = "~/.vagrant.d/insecure_private_key"
+	 config.ssh.insert_key = false
+	 config.ssh.private_key_path = "~/.vagrant.d/insecure_private_key"
 
 	config.vm.box = "gyptazy/ubuntu22.04-arm64"
 	config.vm.box_version = "1.0.1"
@@ -28,8 +28,8 @@ Vagrant.configure("2") do |config|
 
 	###
 	###
-	config.vm.network "forwarded_port", guest: 5173, host: 5173, host_ip: "0.0.0.0"
-	config.vm.network "forwarded_port", guest: 3000, host: 3000, host_ip: "0.0.0.0"
+#	config.vm.network "forwarded_port", guest: 5173, host: 5173, host_ip: "0.0.0.0"
+#	config.vm.network "forwarded_port", guest: 3000, host: 3000, host_ip: "0.0.0.0"
 	###
 	###
 
